@@ -1,0 +1,55 @@
+CREATE DATABASE Hospital_5;
+GO
+
+USE Hospital_5;
+GO
+
+CREATE TABLE Departments (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Building INT NOT NULL CHECK (Building >= 1 AND Building <= 5),
+    Financing MONEY NOT NULL DEFAULT 0,
+    Name NVARCHAR(100) NOT NULL UNIQUE
+);
+CREATE TABLE Diseases (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(100) NOT NULL UNIQUE
+);
+CREATE TABLE Doctors (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(MAX) NOT NULL,
+    Salary MONEY NOT NULL CHECK (Salary >= 0),
+    Surname NVARCHAR(MAX) NOT NULL
+);
+CREATE TABLE DoctorsExaminations (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Date DATE NOT NULL CHECK (Date <= CURDATE()) DEFAULT CURDATE(),
+    DiseaseId INT NOT NULL,
+    DoctorId INT NOT NULL,
+    ExaminationId INT NOT NULL,
+    WardId INT NOT NULL,
+    FOREIGN KEY (DiseaseId) REFERENCES Diseases(Id),
+    FOREIGN KEY (DoctorId) REFERENCES Doctors(Id),
+    FOREIGN KEY (ExaminationId) REFERENCES Examinations(Id),
+    FOREIGN KEY (WardId) REFERENCES Wards(Id)
+);
+CREATE TABLE Examinations (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(100) NOT NULL UNIQUE
+);
+CREATE TABLE Inters (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    DoctorId INT NOT NULL,
+    FOREIGN KEY (DoctorId) REFERENCES Doctors(Id)
+);
+CREATE TABLE Professors (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    DoctorId INT NOT NULL,
+    FOREIGN KEY (DoctorId) REFERENCES Doctors(Id)
+);
+CREATE TABLE Wards (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name NVARCHAR(20) NOT NULL UNIQUE,
+    Places INT NOT NULL CHECK (Places >= 1),
+    DepartmentId INT NOT NULL,
+    FOREIGN KEY (DepartmentId) REFERENCES Departments(Id)
+);
